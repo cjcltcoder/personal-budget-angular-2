@@ -12,7 +12,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: '/about',
+    path: 'about',
     component: AboutComponent
   },
   {
