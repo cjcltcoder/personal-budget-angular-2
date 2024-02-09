@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 
@@ -24,7 +24,10 @@ export class HomepageComponent implements OnInit, AfterViewInit {
     labels: [``]
 };
 
-constructor (private http: HttpClient) { }
+@ViewChild('myChart') chartRef: ElementRef<HTMLCanvasElement>;
+  chart: Chart<"pie", string[], string>;
+
+constructor (private http: HttpClient, private elementRef: ElementRef,) { }
 
 ngOnInit(): void {
   this.http.get('http://localhost:3000/budget')
@@ -36,19 +39,24 @@ ngOnInit(): void {
   }
   });
 }
+
 ngAfterViewInit(): void {
   setTimeout(() => {
     this.createChart();
   });
 }
 
-createChart() {
- // var ctx = document.getElementById('myChart').getContext('2d');
- var ctx = <HTMLCanvasElement>document.getElementById('myChart');
-  var myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: this.dataSource
-  });
-}
+    createChart(){
+      let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
+      this.chart = new Chart(htmlRef, {
+        type: 'pie',
 
+        data: this.dataSource,
+        options: {
+          aspectRatio:2.5
+        }
+
+      });
+
+    }
 }
