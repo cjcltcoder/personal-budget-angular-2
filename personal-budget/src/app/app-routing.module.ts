@@ -5,6 +5,7 @@ import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { P404Component } from './p404/p404.component';
 import { ContactComponent } from './contact/contact.component';
+import { D3chartComponent } from './d3chart/d3chart.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'contact',
     component: ContactComponent
+  },
+  {
+    path: 'd3chart',
+    component: D3chartComponent
   },
   {
     path: '**',
