@@ -15,6 +15,7 @@ import { ArticleComponent } from './article/article.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { ContactComponent } from './contact/contact.component';
 import { D3chartComponent } from './d3chart/d3chart.component';
+import { DataService } from './data.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { D3chartComponent } from './d3chart/d3chart.component';
     AppRoutingModule
   ],
   providers: [
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    DataService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
 import { isPlatformBrowser } from '@angular/common';
-import { PLATFORM_ID, Inject} from '@angular/core';
+import { DataService } from '../data.service'; // Import the DataService
+import { PLATFORM_ID, Inject } from '@angular/core';
 
 @Component({
   selector: 'pb-homepage',
@@ -10,7 +10,6 @@ import { PLATFORM_ID, Inject} from '@angular/core';
   styleUrls: ['./homepage.component.scss']
 })
 export class HomepageComponent implements OnInit, AfterViewInit {
-
   public dataSource: ChartConfiguration['data'] = {
     datasets: [{
       data: [],
@@ -24,13 +23,23 @@ export class HomepageComponent implements OnInit, AfterViewInit {
     labels: []
   };
 
-  //@ViewChild('myChart', {static: true}) chartRef: ElementRef<HTMLCanvasElement>;
-  //chart: Chart;
-
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId :any) { }
+  constructor(
+    private dataService: DataService, // Inject the DataService
+    @Inject(PLATFORM_ID) private platformId: any
+  ) { }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:3000/budget')
+    this.fetchData(); // Call the method to fetch data
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.createChart();
+    }, 1000);
+  }
+
+  fetchData(): void {
+    this.dataService.fetchBudgetData() // Call the method from DataService to fetch data
       .subscribe((res: any) => {
         for (let i = 0; i < res.myBudget.length; i++) {
           this.dataSource.datasets[0].data.push(res.myBudget[i].budget);
@@ -39,20 +48,13 @@ export class HomepageComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.createChart()
-    }, 1000);
-  }
-
   createChart(): void {
-    if(isPlatformBrowser(this.platformId)){
+    if (isPlatformBrowser(this.platformId)) {
       const ctx = <HTMLCanvasElement>document.getElementById('myChart');
       var myPieChart = new Chart(ctx, {
         type: 'pie',
         data: this.dataSource,
       });
     }
-
   }
 }
