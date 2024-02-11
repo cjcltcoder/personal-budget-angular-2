@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
 import { isPlatformBrowser } from '@angular/common';
-import { DataService } from '../data.service'; // Import the DataService
+import { DataService } from '../data.service';
 import { PLATFORM_ID, Inject } from '@angular/core';
 
 @Component({
@@ -24,7 +24,7 @@ export class HomepageComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private dataService: DataService, // Inject the DataService
+    private dataService: DataService, // Inject the DataService Component
     @Inject(PLATFORM_ID) private platformId: any
   ) { }
 

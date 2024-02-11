@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-  private baseUrl = 'http://localhost:3000'; // Base URL of your backend API
-  private budgetData: any; // Variable to store budget data
+  private baseUrl = 'http://localhost:3000'; // Base URL of backend API
+  private budgetData: any; // Variable to store budget data coming from API
 
   constructor(private http: HttpClient) { }
 

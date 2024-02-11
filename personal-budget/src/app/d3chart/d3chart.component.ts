@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { DataService } from '../data.service'; // Import the DataService
+import { DataService } from '../data.service';
 import { isPlatformBrowser } from '@angular/common';
 import * as d3 from 'd3';
 
@@ -29,7 +29,7 @@ export class D3chartComponent implements OnInit {
       .subscribe(data => {
         this.budgetData = data;
         if (isPlatformBrowser(this.platformId)) {
-          this.renderChart(); // Only render the chart if running in the browser environment
+          this.renderChart(); // This only render the chart if running in the browser environment
         }
       });
   }
