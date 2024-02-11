@@ -19,6 +19,10 @@ const budget = {
             title: 'Grocery',
             budget: 110
         },
+        {
+            title: 'Car',
+            budget: 350
+        }
     ]
 };
 
@@ -26,13 +30,13 @@ app.get('/budget', (req, res) => {
     res.json(budget);
 });
 
-const data = [10, 20, 30, 40, 50];
-const labels = ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'];
+// const data = [10, 20, 30, 40, 50];
+// const labels = ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'];
 
 // Route to serve the data for the pie chart
-app.get('/chart', (req, res) => {
-  res.json({ data, labels });
-});
+// app.get('/chart', (req, res) => {
+//   res.json(budget);
+// });
 
 // Route to serve the HTML page with the D3.js chart
 app.get('/', (req, res) => {

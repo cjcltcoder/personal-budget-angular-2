@@ -2,35 +2,34 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as d3 from 'd3';
 
-interface ChartData {
-  data: number[];
-  labels: string[];
+interface BudgetData {
+  myBudget: { title: string; budget: number }[];
 }
 
 @Component({
   selector: 'pb-d3chart',
   templateUrl: './d3chart.component.html',
-  styleUrl: './d3chart.component.scss'
+  styleUrls: ['./d3chart.component.scss']
 })
 export class D3chartComponent implements OnInit {
-  chartData: ChartData;
+  budgetData: BudgetData;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.fetchChartData();
+    this.fetchBudgetData();
   }
 
-  fetchChartData(): void {
-    this.http.get<ChartData>('http://localhost:3000/chart')
+  fetchBudgetData(): void {
+    this.http.get<BudgetData>('http://localhost:3000/budget')
       .subscribe(data => {
-        this.chartData = data;
+        this.budgetData = data;
         this.renderChart();
       });
   }
 
   renderChart(): void {
-    if (!this.chartData || !this.chartData.labels || this.chartData.labels.length === 0) {
+    if (!this.budgetData || !this.budgetData.myBudget || this.budgetData.myBudget.length === 0) {
       console.error('Invalid data for rendering the chart.');
       return;
     }
@@ -40,7 +39,7 @@ export class D3chartComponent implements OnInit {
     const radius = Math.min(width, height) / 2;
 
     const color = d3.scaleOrdinal<string>()
-      .domain(this.chartData.labels)
+      .domain(this.budgetData.myBudget.map(item => item.title))
       .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
     const pie = d3.pie<number>()
@@ -63,24 +62,24 @@ export class D3chartComponent implements OnInit {
       .attr('transform', `translate(${width / 2},${height / 2})`);
 
     const arcs = svg.selectAll('.arc')
-      .data(pie(this.chartData.data))
+      .data(pie(this.budgetData.myBudget.map(item => item.budget)))
       .enter()
       .append('g')
       .attr('class', 'arc');
 
     arcs.append('path')
       .attr('d', (d: any) => arc(d))
-      .attr('fill', (d: any, i: number) => color(this.chartData.labels[i] || ''));
+      .attr('fill', (d: any, i: number) => color(this.budgetData.myBudget[i].title));
 
     const labelArc = d3.arc<any, d3.DefaultArcObject>()
-      .outerRadius(radius * 1.0) // Adjust the outer radius to move labels further outside
-      .innerRadius(radius * 0.9); // Set the same inner radius as the outer radius to prevent labels from being hidden
+      .outerRadius(radius * 1.0)
+      .innerRadius(radius * 0.9);
 
     arcs.append('text')
       .attr('transform', (d: any) => `translate(${labelArc.centroid(d)})`)
       .attr('dy', '.35em')
       .style('text-anchor', 'middle')
-      .text((d: any, i: number) => this.chartData.labels[i]);
+      .text((d: any, i: number) => this.budgetData.myBudget[i].title);
 
     arcs.append('polyline')
       .attr('points', (d: any) => {
