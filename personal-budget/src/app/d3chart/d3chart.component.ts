@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 import * as d3 from 'd3';
 
 interface BudgetData {
@@ -14,7 +15,7 @@ interface BudgetData {
 export class D3chartComponent implements OnInit {
   budgetData: BudgetData;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit(): void {
     this.fetchBudgetData();
@@ -24,7 +25,9 @@ export class D3chartComponent implements OnInit {
     this.http.get<BudgetData>('http://localhost:3000/budget')
       .subscribe(data => {
         this.budgetData = data;
-        this.renderChart();
+        if (isPlatformBrowser(this.platformId)) {
+          this.renderChart(); // Only render the chart if running in the browser environment
+        }
       });
   }
 
